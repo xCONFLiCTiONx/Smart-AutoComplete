@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart AutoComplete - Settings & Dashboard</title>
+  <link rel="icon" type="image/png" href="icons/icon48.png">
+  <style>
+    :root {
+      --bg: #08090d;
+      --card-bg: #0e1118;
+      --card-border: #1a202e;
+      --card-border-hover: #263045;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-light: #38bdf8;
+      --accent-glow: rgba(14, 165, 233, 0.25);
+      --accent-bg: rgba(14, 165, 233, 0.08);
+      --accent-border: rgba(14, 165, 233, 0.3);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.1);
+      --danger-border: rgba(239, 68, 68, 0.3);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.1);
+      --success-border: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --pin: #38bdf8;
+    }
+
+    html {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      scrollbar-width: thin;
+      scrollbar-color: #263045 #0b0d13;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0b0d13;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #263045;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.06) 0%, transparent 60%);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      width: 100%;
+    }
+
+    /* Header Bar */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: contain;
+      display: block;
+      box-shadow: 0 2px 10px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .header-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+
+    .header-title p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Sleek Segmented Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 20px;
+      background: #0b0d13;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 7px 13px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .tab-btn:hover {
+      background: #141824;
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      background: #141f30;
+      border-color: rgba(14, 165, 233, 0.4);
+      color: #38bdf8;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(14, 165, 233, 0.08);
+    }
+
+    .tab-badge {
+      background: rgba(14, 165, 233, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(14, 165, 233, 0.35);
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-size: 10.5px;
+      font-weight: 700;
+      margin-left: 2px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f1f5f9;
+    }
+
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #38bdf8;
+      font-weight: 700;
+      margin: 18px 0 10px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Compact Buttons */
+    .btn {
+      background: #141824;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 31px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: #1c2234;
+      border-color: var(--card-border-hover);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: rgba(14, 165, 233, 0.08);
+      border-color: rgba(14, 165, 233, 0.3);
+      color: #38bdf8;
+    }
+
+    .btn-outline:hover {
+      background: rgba(14, 165, 233, 0.16);
+      border-color: rgba(14, 165, 233, 0.5);
+      color: #7dd3fc;
+    }
+
+    .btn-danger {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: #f87171;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+
+    .btn-success {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+      color: #34d399;
+    }
+
+    .btn-success:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    /* Grid & Inputs */
+    .harvester-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-field {
+      background: #090b10;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      height: 33px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    /* Table Controls & Tables */
+    .table-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .search-input {
+      background: #090b10;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      height: 31px;
+      width: 250px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      background: #090b10;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .filter-pill:hover {
+      background: #141824;
+      color: #fff;
+    }
+
+    .filter-pill.active {
+      background: #141f30;
+      color: #38bdf8;
+      border-color: rgba(14, 165, 233, 0.4);
+      font-weight: 600;
+    }
+
+    .table-wrapper {
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #090b10;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12.5px;
+    }
+
+    th {
+      background: #0e121a;
+      padding: 9px 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 10.5px;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 9px 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    tr:hover td {
+      background: #111520;
+    }
+
+    .tag-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      display: inline-block;
+      letter-spacing: 0.3px;
+    }
+
+    .tag-user_id, .tag-username { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
+    .tag-email { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .tag-cell_phone, .tag-phone { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-address_line_1, .tag-address { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .tag-state { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.4); }
+    .tag-zip { background: rgba(14, 165, 233, 0.15); color: #0ea5e9; border: 1px solid rgba(14, 165, 233, 0.3); }
+    .tag-city { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .tag-general, .tag-site_custom { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); }
+
+    .action-icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 3px 6px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.1s;
+    }
+
+    .action-icon-btn:hover {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .action-icon-btn.pin-active {
+      color: #38bdf8;
+    }
+
+    textarea {
+      width: 100%;
+      background: #090b10;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 10px;
+      color: var(--text);
+      font-family: monospace;
+      font-size: 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-light);
+    }
+
+    #statusToast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0e121a;
+      border: 1px solid var(--accent);
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 12.5px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="header-brand">
+        <img src="icons/icon48.png" alt="Smart AutoComplete" class="header-icon">
+        <div class="header-title">
+          <h1>Smart AutoComplete Dashboard</h1>
+          <p>Local private form assistant & smart autofill manager</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn btn-outline" id="cleanDuplicatesBtn" title="Clean duplicate entries across categories and groups">
+          <span>🧹</span> Clean Duplicates
+        </button>
+        <button type="button" class="btn btn-danger" id="clearAllBtn">
+          <span>🗑️</span> Clear Database
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="profileTab">
+        <span>👤</span> Master Profile
+      </button>
+      <button class="tab-btn" data-tab="addressesTab">
+        <span>📍</span> Addresses
+      </button>
+      <button class="tab-btn" data-tab="snippetsTab">
+        <span>⚡</span> Shortcuts & Snippets
+      </button>
+      <button class="tab-btn" data-tab="rulesTab">
+        <span>🌐</span> Site Rules
+      </button>
+      <button class="tab-btn" data-tab="managerTab">
+        <span>📂</span> Stored Entries <span id="totalBadge" class="tab-badge">0</span>
+      </button>
+      <button class="tab-btn" data-tab="backupTab">
+        <span>💾</span> Backup & Restore
+      </button>
+    </nav>
+
+    <!-- TAB 0: Master Profile -->
+    <div class="tab-content active" id="profileTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>👤</span> Master Autofill Profile</h2>
+          <div style="display:flex; align-items:center; gap: 14px; flex-wrap: wrap;">
+            <label style="display:flex; align-items:center; gap: 6px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+              <input type="checkbox" id="inlineSuggestionsToggle" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+              <span>Inline suggestions</span>
+            </label>
+            <label style="display:flex; align-items:center; gap: 6px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+              <input type="checkbox" id="ghostTextToggle" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+              <span>Ghost text (Tab)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap: 6px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+              <input type="checkbox" id="snippetsToggle" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+              <span>Shortcodes (/handle)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap: 6px; font-size: 12px; cursor: pointer; color: #cbd5e1;" title="Automatically fills forms on page load only when there are more than 2 matching text fields (preserves password manager control on single/two-field login forms).">
+              <input type="checkbox" id="autoFillOnLoadToggle" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+              <span>Autofill on load</span>
+            </label>
+            <label style="display:flex; align-items:center; gap: 6px; font-size: 12px; cursor: pointer; color: #cbd5e1;" title="When enabled, recognized field values are remembered when you submit forms.">
+              <input type="checkbox" id="captureSubmittedValuesToggle" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+              <span>Remember submissions</span>
+            </label>
+            <button class="btn btn-primary" id="saveMasterProfileBtn">
+              <span>💾</span> Save Profile
+            </button>
+          </div>
+        </div>
+        <p class="card-desc">
+          Values entered here are saved locally on your device. The extension naturally remembers values as you fill forms on the web. Age is dynamically calculated from your Date of Birth.
+        </p>
+
+        <form id="masterProfileForm">
+          <!-- SECTION 1: Personal & Name -->
+          <h3 class="section-title">1. Identity & Demographics</h3>
+          <div class="harvester-grid">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="prof_title" class="input-field" placeholder="Mr., Ms., Dr., etc.">
+            </div>
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="prof_first_name" class="input-field" placeholder="First Name">
+            </div>
+            <div class="form-group">
+              <label>Middle Name</label>
+              <input type="text" id="prof_middle_name" class="input-field" placeholder="Middle Name">
+            </div>
+            <div class="form-group">
+              <label>Middle Initial</label>
+              <input type="text" id="prof_middle_initial" class="input-field" placeholder="M.I.">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="prof_last_name" class="input-field" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="prof_full_name" class="input-field" placeholder="Full Name">
+            </div>
+            <div class="form-group">
+              <label>Sex / Gender</label>
+              <select id="prof_sex" class="input-field">
+                <option value="">(Select Sex)</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date Of Birth</label>
+              <input type="text" id="prof_dob" class="input-field" placeholder="YYYY-MM-DD or MM/DD/YYYY">
+            </div>
+            <div class="form-group">
+              <label>Month (DOB)</label>
+              <input type="text" id="prof_dob_month" class="input-field" placeholder="01">
+            </div>
+            <div class="form-group">
+              <label>Day (DOB)</label>
+              <input type="text" id="prof_dob_day" class="input-field" placeholder="15">
+            </div>
+            <div class="form-group">
+              <label>Year (DOB)</label>
+              <input type="text" id="prof_dob_year" class="input-field" placeholder="1990">
+            </div>
+            <div class="form-group">
+              <label>Birth Place</label>
+              <input type="text" id="prof_birth_place" class="input-field" placeholder="City, State / Country">
+            </div>
+          </div>
+
+          <!-- SECTION 2: User Handle / Username -->
+          <h3 class="section-title">2. User Handle / Username</h3>
+          <div class="harvester-grid">
+            <div class="form-group">
+              <label>User ID / Username</label>
+              <input type="text" id="prof_user_id" class="input-field" placeholder="e.g. xCONFLiCTiONx">
+            </div>
+          </div>
+
+          <!-- SECTION 3: Contact & Web -->
+          <h3 class="section-title">3. Contact Information</h3>
+          <div class="harvester-grid">
+            <div class="form-group">
+              <label>E-mail</label>
+              <input type="email" id="prof_email" class="input-field" placeholder="user@example.com">
+            </div>
+            <div class="form-group">
+              <label>Cell Phone</label>
+              <input type="tel" id="prof_cell_phone" class="input-field" placeholder="(555) 012-3456">
+            </div>
+            <div class="form-group">
+              <label>Home Phone</label>
+              <input type="tel" id="prof_home_phone" class="input-field" placeholder="Home Telephone">
+            </div>
+            <div class="form-group">
+              <label>Work Telephone</label>
+              <input type="tel" id="prof_work_phone" class="input-field" placeholder="Work Telephone">
+            </div>
+            <div class="form-group">
+              <label>Fax</label>
+              <input type="tel" id="prof_fax" class="input-field" placeholder="Fax Number">
+            </div>
+            <div class="form-group">
+              <label>Web Site</label>
+              <input type="url" id="prof_website" class="input-field" placeholder="https://xconflictionx.cc">
+            </div>
+          </div>
+
+          <!-- SECTION 4: Addresses Callout -->
+          <div style="margin: 18px 0 14px 0; padding: 12px 16px; background: rgba(14, 165, 233, 0.05); border: 1px dashed rgba(14, 165, 233, 0.3); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <strong style="color: #38bdf8; font-size: 13px; display: block; margin-bottom: 2px;">📍 Manage Addresses Independently</strong>
+              <span style="font-size: 12px; color: var(--text-muted);">Manage your Shipping, Billing, and Home addresses with secondary apartment lines on the Addresses tab.</span>
+            </div>
+            <button type="button" class="btn btn-outline" id="goToAddressesTabBtn">
+              <span>📍</span> Go to Addresses Tab →
+            </button>
+          </div>
+
+          <!-- SECTION 5: Work & Income -->
+          <h3 class="section-title">4. Professional & Income</h3>
+          <div class="harvester-grid">
+            <div class="form-group">
+              <label>Company</label>
+              <input type="text" id="prof_company" class="input-field" placeholder="Company Name">
+            </div>
+            <div class="form-group">
+              <label>Position</label>
+              <input type="text" id="prof_position" class="input-field" placeholder="Job Title / Role">
+            </div>
+            <div class="form-group">
+              <label>Income</label>
+              <input type="text" id="prof_income" class="input-field" placeholder="Annual Income / Salary">
+            </div>
+          </div>
+
+          <!-- SECTION 6: Identification -->
+          <h3 class="section-title">5. Identification</h3>
+          <div class="harvester-grid">
+            <div class="form-group">
+              <label>Social Security Number</label>
+              <input type="text" id="prof_social_security_number" class="input-field" placeholder="SSN (Optional)">
+            </div>
+            <div class="form-group">
+              <label>Driver License Number</label>
+              <input type="text" id="prof_driver_license_number" class="input-field" placeholder="Driver License #">
+            </div>
+          </div>
+
+          <div style="margin-top: 18px;">
+            <button type="button" class="btn btn-primary" id="saveMasterProfileBtnBottom" style="height: 35px; padding: 0 18px; font-size: 13px;">
+              <span>💾</span> Save Master Profile
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top: 14px; background: #0b0e14; border-color: rgba(14, 165, 233, 0.25);">
+        <div class="card-header" style="margin-bottom: 6px;">
+          <h2 class="card-title" style="color: #38bdf8;"><span>🧪</span> Test Your Auto Complete Setup</h2>
+          <a href="https://xconflictionx.cc/tools/auto-complete/" target="_blank" class="btn btn-outline" style="text-decoration: none;">
+            <span>🚀</span> Open Live Test Suite
+          </a>
+        </div>
+        <p class="card-desc" style="margin: 0; color: #94a3b8; font-size: 12px;">
+          Test your profile values and dual billing/shipping groups live in our hosted test sandbox at <a href="https://xconflictionx.cc/tools/auto-complete/" target="_blank" style="color: #38bdf8; text-decoration: underline;">https://xconflictionx.cc/tools/auto-complete/</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- TAB 1: Addresses (Shipping & Billing) -->
+    <div class="tab-content" id="addressesTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>📍</span> Stored Addresses & Defaults</h2>
+          <div style="display:flex; align-items:center; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline" id="swapAddressDefaultsBtn" title="Swap Shipping and Billing default roles between Address 1 and Address 2">
+              <span>⇄</span> Swap Defaults
+            </button>
+            <button class="btn btn-primary" id="saveAddressesBtn">
+              <span>💾</span> Save Addresses
+            </button>
+          </div>
+        </div>
+        <p class="card-desc">
+          Configure your addresses and assign independent default roles for <strong>Home</strong>, <strong>Shipping</strong>, and <strong>Billing</strong>. Secondary address lines (Apt, Suite, Unit) are strictly matched to each address.
+        </p>
+
+        <!-- Warning Banner for conflicting defaults -->
+        <div id="addressWarningBanner" style="display: none; margin: 12px 0; padding: 10px 14px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; color: #fbbf24; font-size: 12px;">
+          <strong id="addressWarningTitle">⚠️ Warning:</strong>
+          <span id="addressWarningText">Multiple addresses are selected for the same role.</span>
+        </div>
+
+        <form id="addressesForm">
+          <!-- CARD 1: Address 1 -->
+          <div style="margin-top: 14px; padding: 16px; background: #090c12; border: 1px solid var(--card-border); border-radius: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">🏠</span>
+                <input type="text" id="addr1_label" class="input-field" value="Address 1 (Home)" style="width: 180px; font-weight: 600; font-size: 13px;" placeholder="Address 1 Label">
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr1_isDefaultHome" checked style="accent-color: #10b981; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #34d399;">Default Home</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr1_isDefaultShipping" checked style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #38bdf8;">Default Shipping</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr1_isDefaultBilling" style="accent-color: #0284c7; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #0ea5e9;">Default Billing</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="harvester-grid">
+              <div class="form-group" style="grid-column: span 2;">
+                <label>Address Line 1</label>
+                <input type="text" id="addr1_address_line_1" class="input-field" placeholder="123 Main Street">
+              </div>
+              <div class="form-group">
+                <label>Address Line 2 (Apt, Suite, Unit)</label>
+                <input type="text" id="addr1_address_line_2" class="input-field" placeholder="Leave blank if none">
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="addr1_city" class="input-field" placeholder="City">
+              </div>
+              <div class="form-group">
+                <label>State / Province</label>
+                <input type="text" id="addr1_state" class="input-field" placeholder="State / Province">
+              </div>
+              <div class="form-group">
+                <label>Zip (5-Digit)</label>
+                <input type="text" id="addr1_zip" class="input-field" placeholder="78701">
+              </div>
+              <div class="form-group">
+                <label>+4 Extension (Optional)</label>
+                <input type="text" id="addr1_zip4" class="input-field" placeholder="1234">
+              </div>
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" id="addr1_country" class="input-field" placeholder="Country">
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: Address 2 -->
+          <div style="margin-top: 16px; padding: 16px; background: #090c12; border: 1px solid var(--card-border); border-radius: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">🏢</span>
+                <input type="text" id="addr2_label" class="input-field" value="Address 2 (Alternate)" style="width: 200px; font-weight: 600; font-size: 13px;" placeholder="Address 2 Label">
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr2_isDefaultHome" style="accent-color: #10b981; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #34d399;">Default Home</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr2_isDefaultShipping" style="accent-color: #0ea5e9; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #38bdf8;">Default Shipping</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; color: #cbd5e1;">
+                  <input type="checkbox" id="addr2_isDefaultBilling" checked style="accent-color: #0284c7; width: 14px; height: 14px;">
+                  <span style="font-weight: 600; color: #0ea5e9;">Default Billing</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="harvester-grid">
+              <div class="form-group" style="grid-column: span 2;">
+                <label>Address Line 1</label>
+                <input type="text" id="addr2_address_line_1" class="input-field" placeholder="456 Billing Ave">
+              </div>
+              <div class="form-group">
+                <label>Address Line 2 (Apt, Suite, Unit)</label>
+                <input type="text" id="addr2_address_line_2" class="input-field" placeholder="Leave blank if none">
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="addr2_city" class="input-field" placeholder="City">
+              </div>
+              <div class="form-group">
+                <label>State / Province</label>
+                <input type="text" id="addr2_state" class="input-field" placeholder="State / Province">
+              </div>
+              <div class="form-group">
+                <label>Zip (5-Digit)</label>
+                <input type="text" id="addr2_zip" class="input-field" placeholder="78701">
+              </div>
+              <div class="form-group">
+                <label>+4 Extension (Optional)</label>
+                <input type="text" id="addr2_zip4" class="input-field" placeholder="1234">
+              </div>
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" id="addr2_country" class="input-field" placeholder="Country">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+            <button type="button" class="btn btn-primary" id="saveAddressesBtnBottom" style="height: 35px; padding: 0 18px; font-size: 13px;">
+              <span>💾</span> Save Addresses
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 2: Shortcuts & Snippets -->
+    <div class="tab-content" id="snippetsTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>⚡</span> Shortcuts & Text Expanders</h2>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn" id="resetSnippetsBtn">Reset Defaults</button>
+          </div>
+        </div>
+        <p class="card-desc">
+          Type shortcut triggers (e.g. <code>/handle</code>, <code>/email</code>, <code>/phone</code>, <code>/addr</code>, <code>/date</code>, <code>/shrug</code>) into any text box or textarea to expand them instantly. Type <code>/</code> anywhere to browse the interactive shortcode menu.
+        </p>
+
+        <!-- Add Snippet Box -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; background: #090c12; padding: 12px; border-radius: 6px; border: 1px solid var(--card-border);">
+          <input type="text" id="newSnippetTrigger" class="search-input" style="width: 130px;" placeholder="/shortcut" />
+          <input type="text" id="newSnippetValue" class="search-input" style="flex: 1; min-width: 180px;" placeholder="Replacement text or {{token}}" />
+          <input type="text" id="newSnippetDesc" class="search-input" style="width: 180px;" placeholder="Description (optional)" />
+          <button class="btn btn-primary" id="addSnippetBtn"><span>+</span> Add Shortcut</button>
+        </div>
+
+        <!-- Snippets Table -->
+        <div class="table-wrapper">
+          <table id="snippetsTable">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Shortcut Trigger</th>
+                <th>Expansion / Value</th>
+                <th>Description</th>
+                <th style="width: 70px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="snippetsTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Site Rules & Paused Sites -->
+    <div class="tab-content" id="rulesTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>🌐</span> Site Rules & Paused Domains</h2>
+        </div>
+        <p class="card-desc">
+          Manage websites where Smart AutoComplete is paused. Paused domains will not show suggestions or autofill forms.
+        </p>
+
+        <!-- Add Domain Box -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; background: #090c12; padding: 12px; border-radius: 6px; border: 1px solid var(--card-border);">
+          <input type="text" id="newDomainInput" class="search-input" style="flex: 1;" placeholder="e.g. internal.company.com or bank.com" />
+          <button class="btn btn-danger" id="addDisabledDomainBtn"><span>⏸</span> Pause On Domain</button>
+        </div>
+
+        <ul id="disabledDomainsList" style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- TAB 4: Manage Stored Entries -->
+    <div class="tab-content" id="managerTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>📂</span> Remembered Form Entries</h2>
+          <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+            <input type="text" id="addEntryText" placeholder="Add entry (e.g. xCONFLiCTiONx)..." class="input-field" style="width: 240px;">
+            <select id="addEntryCategory" class="input-field" style="width: 130px;">
+              <option value="user_id">Handle</option>
+              <option value="email">Email</option>
+              <option value="cell_phone">Cell Phone</option>
+              <option value="home_phone">Home Phone</option>
+              <option value="work_phone">Work Phone</option>
+              <option value="fax">Fax</option>
+              <option value="first_name">First Name</option>
+              <option value="last_name">Last Name</option>
+              <option value="address_line_1">Address</option>
+              <option value="address_line_2">Address Line 2</option>
+              <option value="zip">Zip (5-Digit)</option>
+              <option value="zip4">Zip+4 Extension</option>
+              <option value="site_custom">Site Input</option>
+            </select>
+            <button class="btn btn-primary" id="addEntryBtn">+ Add & Pin</button>
+          </div>
+        </div>
+
+        <div class="table-controls">
+          <input type="text" id="tableSearch" placeholder="Search saved phrases..." class="search-input">
+          <div class="filter-pills">
+            <button class="filter-pill active" data-category="all">All</button>
+            <button class="filter-pill" data-category="user_id">Handles</button>
+            <button class="filter-pill" data-category="email">Emails</button>
+            <button class="filter-pill" data-category="cell_phone">Cell Phones</button>
+            <button class="filter-pill" data-category="home_phone">Home Phones</button>
+            <button class="filter-pill" data-category="work_phone">Work Phones</button>
+            <button class="filter-pill" data-category="address_line_1">Addresses</button>
+            <button class="filter-pill" data-category="site_custom">Site Specific</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 44px;">Pin</th>
+                <th style="width: 110px;">Category</th>
+                <th>Remembered Text</th>
+                <th style="width: 70px;">Used</th>
+                <th style="width: 70px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="entriesTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: Local Backup & JSON Restore Only -->
+    <div class="tab-content" id="backupTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>💾</span> Local Backup & Restore (.json)</h2>
+        </div>
+        <p class="card-desc">
+          Smart AutoComplete stores all information strictly in your browser's local memory. To transfer or preserve your data, download a backup file. You can restore your data at any time by uploading your backup file.
+        </p>
+        <div style="display:flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="downloadBackupBtn">
+            <span>⬇️</span> Download Backup File (.json)
+          </button>
+          <button class="btn btn-outline" id="uploadFileTriggerBtn">
+            <span>📁</span> Upload & Restore File (.json)
+          </button>
+          <input type="file" id="fileUploadInput" accept=".json" style="display: none;">
+          <button class="btn" id="exportJsonBtn">View JSON Text</button>
+          <button class="btn" id="importJsonBtn">Restore from Box Below</button>
+        </div>
+        <textarea id="jsonArea" placeholder="Backup JSON data will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="statusToast"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>

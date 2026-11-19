@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Smart AutoComplete",
+  "version": "2.2.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArkhzP+CWp2K0h+jb0+v3wQGHrwo8Mr6h+j0c2Tnv7z9rGIYNcUHKCV4oZ0il3LzpDTMzhvO++Mh8x2iq62PeWFbLLWaNyFzXdQ/3VFkNb9+KvkV0vS0FGjCuvIy+g/PmUllQiWxJlAe3/oef69lVVC+MWgY7vJoXrobW6neB9L92qO8Ky0iJ2r53yWge0WDnFIepNoV3niKFa9p9N5zs61gbBLhVlgVrU1LZThQMJDGKFziUTOrWNywT9I49/3PpZKylKytosLof1STBjp6E1InyctsvcBEmzRJLLw8VBa78nZMRVgphZqUPOlg0spFghoMYoZa9+aXtjqCM3bCNJQIDAQAB",
+  "description": "Smart, privacy-first autocomplete for text fields. Inline dark-theme dropdown with instant deletion, Chrome autofill importer, shortcode expansion, and handle remembering.",
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Smart AutoComplete",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png",
+    "512": "icons/icon512.png"
+  }
+}

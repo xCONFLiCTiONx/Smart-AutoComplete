@@ -160,8 +160,13 @@
     }
 
     .site-dot.is-paused {
-      background: var(--warning);
-      box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+      background: var(--danger);
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
+    }
+
+    .site-dot.is-unavailable {
+      background: var(--text-subtle);
+      box-shadow: none;
     }
 
     .site-domain-box {
@@ -184,29 +189,28 @@
       color: var(--text-subtle);
     }
 
-    .site-toggle-btn {
+    .site-status-pill {
       background: var(--success-bg);
       color: var(--success);
       border: 1px solid var(--success-border);
       border-radius: 6px;
-      padding: 4px 9px;
-      font-size: 11px;
+      padding: 3px 8px;
+      font-size: 10.5px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .site-toggle-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
+    .site-status-pill.is-paused {
+      background: var(--danger-bg);
+      color: #f87171;
+      border-color: var(--danger-border);
     }
 
-    .site-toggle-btn.is-paused {
-      background: var(--warning-bg);
-      color: var(--warning);
-      border-color: var(--warning-border);
+    .site-status-pill.is-unavailable {
+      background: rgba(100, 116, 139, 0.12);
+      color: var(--text-subtle);
+      border-color: rgba(100, 116, 139, 0.25);
     }
 
     /* Buttons matching Settings design system */
@@ -249,6 +253,36 @@
       border-color: rgba(56, 189, 248, 0.6);
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
       transform: translateY(-1px);
+    }
+
+    .btn-exclude {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: #f87171;
+    }
+
+    .btn-exclude:hover:not(:disabled) {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+
+    .btn-exclude.is-excluded {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+      color: #34d399;
+    }
+
+    .btn-exclude.is-excluded:hover:not(:disabled) {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .btn-grid {
@@ -301,13 +335,15 @@
           <span class="site-subtitle" id="siteSubtitle">Active on this site</span>
         </div>
       </div>
-      <button class="site-toggle-btn" id="siteToggleBtn" title="Toggle Smart AutoComplete on this website">
-        Active
-      </button>
+      <span class="site-status-pill" id="siteStatusPill">Active</span>
     </div>
 
     <button type="button" class="btn btn-primary" id="autofillPageBtn">
       <span>⚡</span> AutoFill Page
+    </button>
+
+    <button type="button" class="btn btn-exclude" id="excludeSiteBtn" title="Exclude the current website from Smart AutoComplete">
+      <span>🚫</span> Exclude Current Site
     </button>
 
     <div class="btn-grid">

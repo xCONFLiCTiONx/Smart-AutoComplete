@@ -2247,12 +2247,15 @@
         captureSubmittedValues = Boolean(settings.captureSubmittedValues);
         snippetsEnabled = settings.snippetsEnabled !== false;
         ghostTextEnabled = settings.ghostTextEnabled !== false;
+        const wasPaused = isDomainPaused;
         const disabledDomains = Array.isArray(settings.disabledDomains) ? settings.disabledDomains : [];
         const currentHost = window.location.hostname.toLowerCase();
         isDomainPaused = disabledDomains.some(d => currentHost === d || currentHost.endsWith('.' + d));
         if (isDomainPaused) {
           hideDropdown();
           hideGhostText();
+        } else if (wasPaused) {
+          scanPage();
         }
       }
     });

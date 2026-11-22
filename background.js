@@ -1922,18 +1922,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             break;
           }
           const list = Array.isArray(cachedSettings.disabledDomains) ? [...cachedSettings.disabledDomains] : [];
-          const idx = list.indexOf(rawDomain);
+          const isMatched = list.some(d => rawDomain === d || rawDomain.endsWith('.' + d));
           let isPaused = false;
-          if (idx >= 0) {
-            list.splice(idx, 1);
+          let updatedList = list;
+          if (isMatched) {
+            updatedList = list.filter(d => !(rawDomain === d || rawDomain.endsWith('.' + d)));
             isPaused = false;
           } else {
-            list.push(rawDomain);
+            updatedList.push(rawDomain);
             isPaused = true;
           }
-          cachedSettings.disabledDomains = list;
+          cachedSettings.disabledDomains = updatedList;
           await chrome.storage.local.set({ settings: cachedSettings });
-          sendResponse({ success: true, isPaused, disabledDomains: list });
+          sendResponse({ success: true, isPaused, disabledDomains: updatedList });
           break;
         }
 
